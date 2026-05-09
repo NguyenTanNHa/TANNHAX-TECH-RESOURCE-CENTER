@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Settings2, Bell, Shield, Moon, Monitor, Palette, Lock, User, LogOut, Loader2, X, KeyRound } from "lucide-react";
+import { Settings2, Bell, Shield, Moon, Monitor, Palette, Lock, User, LogOut, Loader2, X, KeyRound, Check } from "lucide-react";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
 
