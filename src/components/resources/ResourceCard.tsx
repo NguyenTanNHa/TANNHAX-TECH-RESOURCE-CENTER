@@ -62,10 +62,10 @@ const PinModal = ({
 
   return (
     <div
-      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 transform-gpu"
+      className="fixed inset-0 z-[200] flex items-center justify-center bg-background/80 backdrop-blur-sm p-4 transform-gpu"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div className="bg-[#18181b] w-full max-w-sm rounded-2xl border border-white/10 shadow-[0_0_60px_-15px_rgba(251,191,36,0.3)] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div className="bg-card w-full max-w-sm rounded-2xl border border-border shadow-[0_0_60px_-15px_rgba(251,191,36,0.3)] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         <div className="h-1 w-full bg-gradient-to-r from-amber-500 to-orange-500" />
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
@@ -74,11 +74,11 @@ const PinModal = ({
                 <Lock className="text-amber-500" size={20} />
               </div>
               <div>
-                <p className="font-semibold text-white text-sm">Protected Document</p>
+                <p className="font-semibold text-foreground text-sm">Protected Document</p>
                 <p className="text-xs text-muted line-clamp-1">{title}</p>
               </div>
             </div>
-            <button onClick={onClose} className="p-1.5 rounded-lg text-muted hover:text-white hover:bg-white/10 transition-colors">
+            <button onClick={onClose} className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-muted/50 transition-colors">
               <X size={16} />
             </button>
           </div>
@@ -90,15 +90,15 @@ const PinModal = ({
               <input
                 ref={inputRef} type="password" value={pin}
                 onChange={(e) => setPin(e.target.value)}
-                className="w-full bg-[#09090b] border border-border rounded-xl py-3 px-4 text-white text-center text-lg tracking-[0.5em] placeholder:tracking-normal placeholder:text-base placeholder:text-muted/40 focus:outline-none focus:border-amber-500/50 transition-colors"
+                className="w-full bg-background border border-border rounded-xl py-3 px-4 text-foreground text-center text-lg tracking-[0.5em] placeholder:tracking-normal placeholder:text-base placeholder:text-muted/40 focus:outline-none focus:border-amber-500/50 transition-colors"
                 placeholder="••••" maxLength={20} required
               />
             </div>
             <div className="flex gap-3">
-              <button type="button" onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-border text-muted hover:text-white hover:bg-white/5 text-sm font-medium transition-all">
+              <button type="button" onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-border text-muted hover:text-foreground hover:bg-muted/30 text-sm font-medium transition-all">
                 Cancel
               </button>
-              <button type="submit" disabled={!pin.trim()} className="flex-[2] py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500 text-amber-500 hover:text-white text-sm font-medium transition-all border border-amber-500/20 hover:border-amber-500 disabled:opacity-40 disabled:cursor-not-allowed">
+              <button type="submit" disabled={!pin.trim()} className="flex-[2] py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500 text-amber-500 hover:text-background text-sm font-medium transition-all border border-amber-500/20 hover:border-amber-500 disabled:opacity-40 disabled:cursor-not-allowed">
                 Confirm
               </button>
             </div>
@@ -129,7 +129,7 @@ const CopyButton = ({ url, isProtected }: { url: string; isProtected: boolean })
   return (
     <button
       onClick={handleCopy}
-      className="p-2.5 rounded-xl border border-border hover:bg-white/5 hover:text-white text-muted transition-all flex items-center justify-center"
+      className="p-2.5 rounded-xl border border-border hover:bg-muted/30 hover:text-foreground text-muted transition-all flex items-center justify-center"
       title={isProtected ? "Link protected" : "Copy download link"}
     >
       {copied ? <Check size={16} className="text-emerald-400" /> : <Copy size={16} />}
@@ -191,17 +191,17 @@ export const ResourceCard = React.memo(({ resource, searchQuery }: { resource: R
 
   return (
     <>
-      <div className="group relative bg-[#18181b] border border-border rounded-2xl p-6 transition-all duration-300 hover:shadow-[0_0_30px_-5px_rgba(59,130,246,0.15)] hover:border-primary/30 flex flex-col h-full transform-gpu will-change-transform">
+      <div className="group relative bg-card border border-border rounded-2xl p-6 transition-all duration-300 hover:shadow-[0_0_30px_-5px_rgba(59,130,246,0.15)] hover:border-primary/30 flex flex-col h-full transform-gpu will-change-transform">
         <div className="flex items-start justify-between mb-4">
-          <div className="p-3 bg-white/5 rounded-xl border border-white/5 group-hover:bg-primary/10 transition-colors">
+          <div className="p-3 bg-muted/30 rounded-xl border border-border group-hover:bg-primary/10 transition-colors">
             {getCategoryIcon(resource.category)}
           </div>
-          <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-white/5 text-muted border border-border group-hover:text-white transition-colors capitalize">
+          <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-muted/30 text-muted border border-border group-hover:text-foreground transition-colors capitalize">
             {resource.category}
           </span>
         </div>
 
-        <h3 className="text-xl font-bold text-white mb-2 line-clamp-1 group-hover:text-primary transition-colors">
+        <h3 className="text-xl font-bold text-foreground mb-2 line-clamp-1 group-hover:text-primary transition-colors">
           <HighlightText text={resource.title} query={searchQuery} />
         </h3>
 
@@ -218,19 +218,19 @@ export const ResourceCard = React.memo(({ resource, searchQuery }: { resource: R
           {resource.category === "document" ? (
             <>
               <button onClick={(e) => handleAction("preview", e)} disabled={isUnlocking}
-                className="flex flex-1 items-center justify-center gap-2 bg-white/5 hover:bg-amber-500/10 text-muted hover:text-amber-500 py-2.5 rounded-xl font-medium transition-all duration-300 border border-white/5 hover:border-amber-500/20 disabled:opacity-40 disabled:cursor-not-allowed">
+                className="flex flex-1 items-center justify-center gap-2 bg-muted/30 hover:bg-amber-500/10 text-muted hover:text-amber-500 py-2.5 rounded-xl font-medium transition-all duration-300 border border-border hover:border-amber-500/20 disabled:opacity-40 disabled:cursor-not-allowed">
                 {isUnlocking ? <Loader2 size={18} className="animate-spin" /> : <Eye size={18} />}
                 <span>Preview</span>
               </button>
               <button onClick={(e) => handleAction("download", e)} disabled={isUnlocking}
-                className="flex-[2] flex items-center justify-center gap-2 bg-amber-500/10 hover:bg-amber-500 text-amber-500 hover:text-white py-2.5 rounded-xl font-medium transition-all duration-300 border border-amber-500/20 hover:border-amber-500 disabled:opacity-40 disabled:cursor-not-allowed">
+                className="flex-[2] flex items-center justify-center gap-2 bg-amber-500/10 hover:bg-amber-500 text-amber-500 hover:text-background py-2.5 rounded-xl font-medium transition-all duration-300 border border-amber-500/20 hover:border-amber-500 disabled:opacity-40 disabled:cursor-not-allowed">
                 {isUnlocking ? <Loader2 size={18} className="animate-spin" /> : <Download size={18} />}
                 <span>{isUnlocking ? "Unlocking..." : unlockedData ? "Download" : "Unlock"}</span>
               </button>
             </>
           ) : (
             <Link href={resource.downloadUrl} target="_blank" rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center gap-2 bg-primary/10 hover:bg-primary text-primary hover:text-white py-2.5 rounded-xl font-medium transition-all duration-300 border border-primary/20 hover:border-primary">
+              className="flex-1 flex items-center justify-center gap-2 bg-primary/10 hover:bg-primary text-primary hover:text-background py-2.5 rounded-xl font-medium transition-all duration-300 border border-primary/20 hover:border-primary">
               <Download size={18} />
               <span>Download</span>
             </Link>
@@ -244,10 +244,10 @@ export const ResourceCard = React.memo(({ resource, searchQuery }: { resource: R
       )}
 
       {isPreviewOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 md:p-10 transform-gpu will-change-transform">
-          <div className="bg-[#18181b] w-full max-w-6xl h-full max-h-[90vh] rounded-2xl border border-white/10 flex flex-col overflow-hidden shadow-2xl relative animate-in fade-in zoom-in-95 duration-200 transform-gpu">
-            <div className="flex items-center justify-between p-4 border-b border-white/10 bg-[#09090b]">
-              <h3 className="font-bold text-white flex items-center gap-3">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/90 backdrop-blur-sm p-4 md:p-10 transform-gpu will-change-transform">
+          <div className="bg-card w-full max-w-6xl h-full max-h-[90vh] rounded-2xl border border-border flex flex-col overflow-hidden shadow-2xl relative animate-in fade-in zoom-in-95 duration-200 transform-gpu">
+            <div className="flex items-center justify-between p-4 border-b border-border bg-card">
+              <h3 className="font-bold text-foreground flex items-center gap-3">
                 {getCategoryIcon(resource.category)}
                 <span className="line-clamp-1">{resource.title}</span>
               </h3>
@@ -258,7 +258,7 @@ export const ResourceCard = React.memo(({ resource, searchQuery }: { resource: R
                   Download
                 </Link>
                 <button onClick={() => setIsPreviewOpen(false)}
-                  className="p-2 bg-white/5 hover:bg-red-500/20 rounded-lg text-muted hover:text-red-400 transition-colors">
+                  className="p-2 bg-muted/30 hover:bg-red-500/20 rounded-lg text-muted hover:text-red-400 transition-colors">
                   <X size={20} />
                 </button>
               </div>

@@ -19,7 +19,7 @@ const StatCard = ({
   label: string; value: number; icon: React.ReactNode;
   valueColor: string; iconBg: string; trend?: string;
 }) => (
-  <div className="group bg-[#18181b] border border-border rounded-2xl p-5 flex items-center gap-4 hover:border-white/20 hover:shadow-[0_0_24px_-8px_rgba(255,255,255,0.07)] transition-all duration-300">
+  <div className="group bg-card border border-border rounded-2xl p-5 flex items-center gap-4 hover:border-primary/20 hover:shadow-[0_0_24px_-8px_rgba(59,130,246,0.07)] transition-all duration-300">
     <div className={`p-3 rounded-xl ${iconBg} flex-shrink-0`}>{icon}</div>
     <div className="flex-1 min-w-0">
       <p className="text-muted text-sm font-medium truncate">{label}</p>
@@ -48,8 +48,8 @@ const DonutChart = ({ data }: { data: { label: string; value: number; color: str
     <div className="flex items-center gap-8">
       {/* Donut */}
       <div className="relative flex-shrink-0 w-36 h-36" style={{ background: `conic-gradient(${gradient})`, borderRadius: "50%" }}>
-        <div className="absolute inset-[22%] rounded-full bg-[#18181b] flex flex-col items-center justify-center">
-          <span className="text-2xl font-bold text-white leading-none">{total}</span>
+        <div className="absolute inset-[22%] rounded-full bg-card flex flex-col items-center justify-center">
+          <span className="text-2xl font-bold text-foreground leading-none">{total}</span>
           <span className="text-[10px] text-muted mt-0.5">files</span>
         </div>
       </div>
@@ -59,7 +59,7 @@ const DonutChart = ({ data }: { data: { label: string; value: number; color: str
           <div key={s.label} className="flex items-center gap-3">
             <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: s.color }} />
             <span className="text-sm text-muted flex-1">{s.label}</span>
-            <span className="text-sm font-semibold text-white">{s.value}</span>
+            <span className="text-sm font-semibold text-foreground">{s.value}</span>
             <span className="text-xs text-muted w-10 text-right">{s.pct.toFixed(0)}%</span>
           </div>
         ))}
@@ -78,10 +78,10 @@ const getCategoryMeta = (cat: ResourceCategory) => {
 const RecentItem = ({ r }: { r: ResourceItem }) => {
   const meta = getCategoryMeta(r.category);
   return (
-    <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/8 transition-colors group">
+    <div className="flex items-center gap-3 p-3 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors group">
       <div className={`p-2 rounded-lg ${meta.bg} flex-shrink-0`}>{meta.icon}</div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-white line-clamp-1 group-hover:text-primary transition-colors">{r.title}</p>
+        <p className="text-sm font-medium text-foreground line-clamp-1 group-hover:text-primary transition-colors">{r.title}</p>
         <p className="text-xs text-muted capitalize">{meta.label} · {r.fileSize}</p>
       </div>
       {r.category === "document" && <Lock size={12} className="text-amber-500/60 flex-shrink-0" />}
@@ -139,13 +139,13 @@ export default function Home() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-4xl font-bold tracking-tight text-white">
+          <h1 className="text-4xl font-bold tracking-tight text-foreground">
             Welcome to TanNha<span className="text-primary">X</span>
           </h1>
           <p className="text-muted text-lg mt-2">Search and download premium software, drivers, and technical documentation.</p>
         </div>
         <button onClick={refetch} disabled={isLoading}
-          className="p-3 bg-white/5 border border-white/10 rounded-xl text-muted hover:text-white hover:bg-white/10 transition-all active:scale-95 disabled:opacity-50 group"
+          className="p-3 bg-muted/30 border border-border rounded-xl text-muted hover:text-foreground hover:bg-muted/50 transition-all active:scale-95 disabled:opacity-50 group"
           title="Refresh from Google Drive">
           <RefreshCw size={20} className={isLoading ? "animate-spin text-primary" : "group-hover:rotate-180 transition-transform duration-500"} />
         </button>
@@ -161,7 +161,7 @@ export default function Home() {
       ) : (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard label="Total Resources" value={stats.total}
-            icon={<Database size={22} className="text-white" />} valueColor="text-white" iconBg="bg-white/10" trend="All categories" />
+            icon={<Database size={22} className="text-foreground" />} valueColor="text-foreground" iconBg="bg-muted/30" trend="All categories" />
           <StatCard label="Software" value={stats.software}
             icon={<Box size={22} className="text-blue-400" />} valueColor="text-blue-400" iconBg="bg-blue-500/10" trend="Apps & tools" />
           <StatCard label="Drivers" value={stats.driver}
@@ -176,10 +176,10 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
 
           {/* Donut Chart */}
-          <div className="lg:col-span-2 bg-[#18181b] border border-border rounded-2xl p-6">
+          <div className="lg:col-span-2 bg-card border border-border rounded-2xl p-6">
             <div className="flex items-center gap-2 mb-6">
               <div className="p-1.5 bg-primary/10 rounded-lg"><TrendingUp size={16} className="text-primary" /></div>
-              <h2 className="font-semibold text-white">Resource Distribution</h2>
+              <h2 className="font-semibold text-foreground">Resource Distribution</h2>
             </div>
             <DonutChart data={chartData} />
 
@@ -189,7 +189,7 @@ export default function Home() {
                 <div key={d.label}>
                   <div className="flex justify-between text-xs mb-1">
                     <span className="text-muted">{d.label}</span>
-                    <span className="text-white font-medium">{stats.total > 0 ? ((d.value / stats.total) * 100).toFixed(0) : 0}%</span>
+                    <span className="text-foreground font-medium">{stats.total > 0 ? ((d.value / stats.total) * 100).toFixed(0) : 0}%</span>
                   </div>
                   <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
                     <div className="h-full rounded-full transition-all duration-700"
@@ -201,11 +201,11 @@ export default function Home() {
           </div>
 
           {/* Recent Resources */}
-          <div className="lg:col-span-3 bg-[#18181b] border border-border rounded-2xl p-6">
+          <div className="lg:col-span-3 bg-card border border-border rounded-2xl p-6">
             <div className="flex items-center gap-2 mb-6">
               <div className="p-1.5 bg-primary/10 rounded-lg"><Clock size={16} className="text-primary" /></div>
-              <h2 className="font-semibold text-white">Recently Updated</h2>
-              <span className="ml-auto text-xs text-muted bg-white/5 px-2 py-0.5 rounded-full">{recentResources.length} files</span>
+              <h2 className="font-semibold text-foreground">Recently Updated</h2>
+              <span className="ml-auto text-xs text-muted bg-muted/30 px-2 py-0.5 rounded-full">{recentResources.length} files</span>
             </div>
             <div className="flex flex-col gap-2">
               {recentResources.map((r) => <RecentItem key={r.id} r={r} />)}

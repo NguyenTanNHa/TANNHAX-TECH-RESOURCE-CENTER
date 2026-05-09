@@ -19,9 +19,9 @@ export function Sidebar() {
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <aside className="w-64 h-screen fixed left-0 top-0 border-r border-border bg-[#09090b]/80 backdrop-blur-xl flex flex-col z-40 transition-all duration-300 transform-gpu will-change-transform">
+    <aside className="w-64 h-screen fixed left-0 top-0 border-r border-border bg-background/80 backdrop-blur-xl flex flex-col z-40 transition-all duration-300 transform-gpu will-change-transform">
       <div className="p-6">
-        <h2 className="text-2xl font-bold tracking-tighter text-glow text-white">
+        <h2 className="text-2xl font-bold tracking-tighter text-glow text-foreground">
           TanNha<span className="text-primary">X</span>
         </h2>
         <p className="text-xs text-muted mt-1">Tech Resource Center</p>
@@ -36,8 +36,8 @@ export function Sidebar() {
               href={item.href}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group relative ${
                 active
-                  ? "bg-primary/10 text-white border border-primary/20 shadow-[0_0_16px_-4px_rgba(59,130,246,0.3)]"
-                  : "text-muted hover:text-white hover:bg-white/5"
+                  ? "bg-primary/10 text-foreground border border-primary/20 shadow-[0_0_16px_-4px_rgba(59,130,246,0.3)]"
+                  : "text-muted hover:text-foreground hover:bg-foreground/5"
               }`}
             >
               {/* Active left accent bar */}
@@ -64,8 +64,8 @@ export function Sidebar() {
               href="/settings"
               className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group relative ${
                 active
-                  ? "bg-primary/10 text-white border border-primary/20"
-                  : "text-muted hover:text-white hover:bg-white/5"
+                  ? "bg-primary/10 text-foreground border border-primary/20"
+                  : "text-muted hover:text-foreground hover:bg-foreground/5"
               }`}
             >
               {active && (

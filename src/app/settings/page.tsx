@@ -149,14 +149,14 @@ export default function SettingsPage() {
   if (!isAuthenticated) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[70vh] px-4">
-        <div className="w-full max-w-md bg-[#18181b] border border-border rounded-3xl p-8 shadow-[0_0_40px_-10px_rgba(59,130,246,0.15)] relative overflow-hidden">
+        <div className="w-full max-w-md bg-card border border-border rounded-3xl p-8 shadow-[0_0_40px_-10px_rgba(59,130,246,0.15)] relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-purple-500"></div>
           
           <div className="flex flex-col items-center mb-8">
             <div className="p-4 bg-primary/10 rounded-full mb-4">
               <Lock className="text-primary w-8 h-8" />
             </div>
-            <h2 className="text-2xl font-bold text-white">Admin Panel</h2>
+            <h2 className="text-2xl font-bold text-foreground">Admin Panel</h2>
             <p className="text-muted text-sm mt-2 text-center">Sign in to access system settings</p>
           </div>
 
@@ -171,7 +171,7 @@ export default function SettingsPage() {
                   type="text" 
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full bg-[#09090b] border border-border rounded-xl py-3 pl-10 pr-4 text-white placeholder:text-muted/50 focus:outline-none focus:border-primary/50 transition-colors"
+                  className="w-full bg-background border border-border rounded-xl py-3 pl-10 pr-4 text-foreground placeholder:text-muted/50 focus:outline-none focus:border-primary/50 transition-colors"
                   placeholder="Enter username"
                   required
                 />
@@ -188,7 +188,7 @@ export default function SettingsPage() {
                   type="password" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-[#09090b] border border-border rounded-xl py-3 pl-10 pr-4 text-white placeholder:text-muted/50 focus:outline-none focus:border-primary/50 transition-colors"
+                  className="w-full bg-background border border-border rounded-xl py-3 pl-10 pr-4 text-foreground placeholder:text-muted/50 focus:outline-none focus:border-primary/50 transition-colors"
                   placeholder="Enter password"
                   required
                 />

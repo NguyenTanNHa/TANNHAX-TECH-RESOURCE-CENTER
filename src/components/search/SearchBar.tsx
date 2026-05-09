@@ -34,7 +34,7 @@ export function SearchBar({ onSearch, placeholder = "Search for resources..." }:
       <input
         ref={inputRef}
         type="text"
-        className="w-full bg-[#18181b] border border-border text-foreground text-sm rounded-2xl focus:ring-2 focus:ring-primary/50 focus:border-primary block pl-12 pr-12 py-4 transition-all shadow-sm placeholder:text-muted"
+        className="w-full bg-card border border-border text-foreground text-sm rounded-2xl focus:ring-2 focus:ring-primary/50 focus:border-primary block pl-12 pr-12 py-4 transition-all shadow-sm placeholder:text-muted"
         placeholder={placeholder}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
@@ -42,7 +42,7 @@ export function SearchBar({ onSearch, placeholder = "Search for resources..." }:
       {query && (
         <button
           onClick={clearSearch}
-          className="absolute inset-y-0 right-0 flex items-center pr-4 text-muted hover:text-white transition-colors"
+          className="absolute inset-y-0 right-0 flex items-center pr-4 text-muted hover:text-foreground transition-colors"
         >
           <X size={20} />
         </button>
