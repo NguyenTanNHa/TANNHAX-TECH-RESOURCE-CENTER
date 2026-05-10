@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Settings2, Bell, Shield, Moon, Monitor, Palette, Lock, User, LogOut, Loader2, X, KeyRound, Check } from "lucide-react";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
+import { AdminDashboard } from "@/components/admin/AdminDashboard";
 
 export default function SettingsPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -214,17 +215,17 @@ export default function SettingsPage() {
 
   return (
     <div className="flex flex-col gap-8 w-full max-w-4xl mx-auto">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex flex-col gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex flex-col gap-2 sm:gap-4">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-primary/10 rounded-xl">
               <Settings2 className="text-primary" size={32} />
             </div>
-            <h1 className="text-4xl font-bold tracking-tight text-foreground">
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
               Settings
             </h1>
           </div>
-          <p className="text-muted text-lg">
+          <p className="text-muted text-base sm:text-lg">
             Configure system preferences and personalize your interface.
           </p>
         </div>
@@ -237,6 +238,8 @@ export default function SettingsPage() {
           <span>Sign Out</span>
         </button>
       </div>
+
+      <AdminDashboard />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
         {/* Appearance Settings */}
