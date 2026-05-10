@@ -151,6 +151,11 @@ export default function Home() {
         </button>
       </div>
 
+      {/* Search */}
+      <div className="sticky top-0 z-10 py-4 bg-background/80 backdrop-blur-md transform-gpu">
+        <SearchBar onSearch={setSearchQuery} />
+      </div>
+
       {/* Stat Cards */}
       {isLoading ? (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -213,11 +218,6 @@ export default function Home() {
           </div>
         </div>
       )}
-
-      {/* Search */}
-      <div className="sticky top-0 z-10 py-4 bg-background/80 backdrop-blur-md transform-gpu">
-        <SearchBar onSearch={setSearchQuery} />
-      </div>
 
       {/* Resource Grid */}
       {isLoading ? (
