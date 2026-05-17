@@ -3,14 +3,16 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Box, HardDrive, FileText, Settings, MessageSquare, Menu, X } from "lucide-react";
+import { LayoutDashboard, Box, HardDrive, FileText, Settings, MessageSquare, Menu, X, AlertTriangle, Barcode } from "lucide-react";
 
 const navItems = [
-  { label: "Dashboard", href: "/", icon: <LayoutDashboard size={20} /> },
-  { label: "Software", href: "/software", icon: <Box size={20} /> },
-  { label: "Drivers", href: "/drivers", icon: <HardDrive size={20} /> },
-  { label: "Documents", href: "/documents", icon: <FileText size={20} /> },
-  { label: "Feedback", href: "/feedback", icon: <MessageSquare size={20} /> },
+  { label: "Dashboard", href: "/", icon: <LayoutDashboard size={20} />, external: false },
+  { label: "Software", href: "/software", icon: <Box size={20} />, external: false },
+  { label: "Drivers", href: "/drivers", icon: <HardDrive size={20} />, external: false },
+  { label: "Documents", href: "/documents", icon: <FileText size={20} />, external: false },
+  { label: "Feedback", href: "/feedback", icon: <MessageSquare size={20} />, external: false },
+  { label: "Common Errors", href: "https://docs.google.com/document/d/18PbOQyQeR0ry3HUUZDZ0VUVkgiHlPKJbdGl2cgLPNCw/edit?tab=t.l6svnk6bv3jf", icon: <AlertTriangle size={20} />, external: true },
+  { label: "Scanner Setup", href: "https://docs.google.com/document/d/1fpLRh7TMZju3dCdStFEwEvh_5ByYIFD2MTJhacqvqNs/edit?tab=t.s8hyz5c2k3yc", icon: <Barcode size={20} />, external: true },
 ];
 
 export function Sidebar() {
@@ -72,6 +74,23 @@ export function Sidebar() {
 
       <nav className="flex-1 px-4 py-2 space-y-1">
         {navItems.map((item) => {
+          if (item.external) {
+            return (
+              <a
+                key={item.label}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group relative text-muted hover:text-foreground hover:bg-foreground/5"
+              >
+                <span className="transition-colors group-hover:text-primary">
+                  {item.icon}
+                </span>
+                <span className="font-medium">{item.label}</span>
+              </a>
+            );
+          }
+
           const active = isActive(item.href);
           return (
             <Link
