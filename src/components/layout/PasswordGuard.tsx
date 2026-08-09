@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Lock, Eye, EyeOff, ShieldAlert, CheckCircle2 } from "lucide-react";
+import { Lock, ShieldAlert, CheckCircle2 } from "lucide-react";
 
 interface PasswordGuardProps {
   children: React.ReactNode;
@@ -10,9 +10,7 @@ interface PasswordGuardProps {
 export function PasswordGuard({ children }: PasswordGuardProps) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [rememberMe, setRememberMe] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -21,11 +19,13 @@ export function PasswordGuard({ children }: PasswordGuardProps) {
   const CORRECT_PASSWORD = process.env.NEXT_PUBLIC_SITE_PASSWORD || "140703";
 
   useEffect(() => {
-    // Check auth status on client side
-    const isAuthLocal = localStorage.getItem("site_authenticated") === "true";
+    // Clean up any legacy localStorage session if present for security
+    localStorage.removeItem("site_authenticated");
+
+    // Check session auth status on client side (sessionStorage only)
     const isAuthSession = sessionStorage.getItem("site_authenticated") === "true";
 
-    if (isAuthLocal || isAuthSession) {
+    if (isAuthSession) {
       setIsAuthenticated(true);
     } else {
       setIsAuthenticated(false);
@@ -52,11 +52,7 @@ export function PasswordGuard({ children }: PasswordGuardProps) {
       if (password === CORRECT_PASSWORD) {
         setIsSuccess(true);
         setTimeout(() => {
-          if (rememberMe) {
-            localStorage.setItem("site_authenticated", "true");
-          } else {
-            sessionStorage.setItem("site_authenticated", "true");
-          }
+          sessionStorage.setItem("site_authenticated", "true");
           setIsAuthenticated(true);
         }, 600); // Wait for success animation
       } else {
@@ -141,7 +137,7 @@ export function PasswordGuard({ children }: PasswordGuardProps) {
               </span>
               <input
                 ref={inputRef}
-                type={showPassword ? "text" : "password"}
+                type="password"
                 placeholder="Nhập mật khẩu truy cập..."
                 value={password}
                 onChange={(e) => {
@@ -149,17 +145,8 @@ export function PasswordGuard({ children }: PasswordGuardProps) {
                   if (error) setError(null);
                 }}
                 disabled={isSubmitting || isSuccess}
-                className="w-full pl-10 pr-10 py-3 bg-background/50 border border-border rounded-2xl text-foreground placeholder-muted/80 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all text-sm font-medium"
+                className="w-full pl-10 pr-4 py-3 bg-background/50 border border-border rounded-2xl text-foreground placeholder-muted/80 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all text-sm font-medium"
               />
-              {password && (
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-muted hover:text-foreground transition-colors"
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              )}
             </div>
             
             {/* Error Message */}
@@ -169,22 +156,6 @@ export function PasswordGuard({ children }: PasswordGuardProps) {
                 <span>{error}</span>
               </div>
             )}
-          </div>
-
-          {/* Remember Me Toggle */}
-          <div className="flex items-center justify-between px-1">
-            <label className="flex items-center gap-2 cursor-pointer group">
-              <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                disabled={isSubmitting || isSuccess}
-                className="w-4.5 h-4.5 rounded border-border text-primary focus:ring-primary/50 bg-background/50 cursor-pointer"
-              />
-              <span className="text-xs text-muted group-hover:text-foreground transition-colors font-medium select-none">
-                Ghi nhớ đăng nhập
-              </span>
-            </label>
           </div>
 
           {/* Submit Button */}
