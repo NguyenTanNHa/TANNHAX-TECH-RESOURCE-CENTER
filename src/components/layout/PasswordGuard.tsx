@@ -8,7 +8,9 @@ interface PasswordGuardProps {
 }
 
 export function PasswordGuard({ children }: PasswordGuardProps) {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  // Purely in-memory authentication state (resets on F5 / page reload for maximum security)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isInitializing, setIsInitializing] = useState<boolean>(true);
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -18,9 +20,15 @@ export function PasswordGuard({ children }: PasswordGuardProps) {
   // Read environment password (publicly exposed in NextJS)
   const CORRECT_PASSWORD = process.env.NEXT_PUBLIC_SITE_PASSWORD || "140703";
 
-  // Helper function to wipe all cookies (client-side + HTTP-only via API)
-  const clearAllCookiesAndTokens = () => {
-    // 1. Wipe client-side accessible document cookies
+  // Helper function to wipe all cookies and storage
+  const clearAllSecurityData = () => {
+    try {
+      localStorage.clear();
+      sessionStorage.clear();
+    } catch (e) {
+      // Ignore storage errors
+    }
+
     try {
       const cookies = document.cookie.split(";");
       for (let i = 0; i < cookies.length; i++) {
@@ -36,7 +44,6 @@ export function PasswordGuard({ children }: PasswordGuardProps) {
       // Ignore cookie errors
     }
 
-    // 2. Wipe HttpOnly server cookies (admin_token, tannhax_admin_auth)
     try {
       if (typeof navigator !== "undefined" && navigator.sendBeacon) {
         navigator.sendBeacon("/api/auth/logout");
@@ -49,39 +56,24 @@ export function PasswordGuard({ children }: PasswordGuardProps) {
   };
 
   useEffect(() => {
-    // Clean up any legacy localStorage session if present for maximum security
-    try {
-      localStorage.removeItem("site_authenticated");
-    } catch (e) {
-      // Ignore storage errors
-    }
+    // Always wipe all storage and cookies on mount so F5 / reload requires entering password again
+    clearAllSecurityData();
+    setIsInitializing(false);
 
-    // Check session auth status on client side (sessionStorage only)
-    const isAuthSession = sessionStorage.getItem("site_authenticated") === "true";
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 100);
 
-    if (isAuthSession) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
-      // Clean all cookies immediately if not authenticated
-      clearAllCookiesAndTokens();
-      // Focus on input field once mounted
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 100);
-    }
-
-    // Listener when leaving/closing the tab to wipe cookies
-    const handleTabUnload = () => {
-      clearAllCookiesAndTokens();
+    const handleUnload = () => {
+      clearAllSecurityData();
     };
 
-    window.addEventListener("pagehide", handleTabUnload);
-    window.addEventListener("beforeunload", handleTabUnload);
+    window.addEventListener("pagehide", handleUnload);
+    window.addEventListener("beforeunload", handleUnload);
 
     return () => {
-      window.removeEventListener("pagehide", handleTabUnload);
-      window.removeEventListener("beforeunload", handleTabUnload);
+      window.removeEventListener("pagehide", handleUnload);
+      window.removeEventListener("beforeunload", handleUnload);
     };
   }, []);
 
@@ -101,8 +93,9 @@ export function PasswordGuard({ children }: PasswordGuardProps) {
       if (password === CORRECT_PASSWORD) {
         setIsSuccess(true);
         setTimeout(() => {
-          sessionStorage.setItem("site_authenticated", "true");
           setIsAuthenticated(true);
+          setIsSubmitting(false);
+          setIsSuccess(false);
         }, 600); // Wait for success animation
       } else {
         setError("Mật khẩu không chính xác. Vui lòng thử lại!");
@@ -113,8 +106,7 @@ export function PasswordGuard({ children }: PasswordGuardProps) {
     }, 400);
   };
 
-  // Prevent flash of content during initial client check
-  if (isAuthenticated === null) {
+  if (isInitializing) {
     return (
       <div className="fixed inset-0 bg-background flex items-center justify-center z-50">
         <div className="flex flex-col items-center gap-4">
@@ -125,7 +117,7 @@ export function PasswordGuard({ children }: PasswordGuardProps) {
     );
   }
 
-  // Render children if authenticated
+  // Render children if authenticated in memory
   if (isAuthenticated) {
     return <>{children}</>;
   }
