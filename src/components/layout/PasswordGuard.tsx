@@ -18,9 +18,43 @@ export function PasswordGuard({ children }: PasswordGuardProps) {
   // Read environment password (publicly exposed in NextJS)
   const CORRECT_PASSWORD = process.env.NEXT_PUBLIC_SITE_PASSWORD || "140703";
 
+  // Helper function to wipe all cookies (client-side + HTTP-only via API)
+  const clearAllCookiesAndTokens = () => {
+    // 1. Wipe client-side accessible document cookies
+    try {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i];
+        const eqPos = cookie.indexOf("=");
+        const name = eqPos > -1 ? cookie.substring(0, eqPos).trim() : cookie.trim();
+        if (name) {
+          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
+          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=${window.location.hostname};`;
+        }
+      }
+    } catch (e) {
+      // Ignore cookie errors
+    }
+
+    // 2. Wipe HttpOnly server cookies (admin_token, tannhax_admin_auth)
+    try {
+      if (typeof navigator !== "undefined" && navigator.sendBeacon) {
+        navigator.sendBeacon("/api/auth/logout");
+      } else {
+        fetch("/api/auth/logout", { method: "POST", keepalive: true });
+      }
+    } catch (e) {
+      // Ignore fetch errors
+    }
+  };
+
   useEffect(() => {
-    // Clean up any legacy localStorage session if present for security
-    localStorage.removeItem("site_authenticated");
+    // Clean up any legacy localStorage session if present for maximum security
+    try {
+      localStorage.removeItem("site_authenticated");
+    } catch (e) {
+      // Ignore storage errors
+    }
 
     // Check session auth status on client side (sessionStorage only)
     const isAuthSession = sessionStorage.getItem("site_authenticated") === "true";
@@ -29,11 +63,26 @@ export function PasswordGuard({ children }: PasswordGuardProps) {
       setIsAuthenticated(true);
     } else {
       setIsAuthenticated(false);
+      // Clean all cookies immediately if not authenticated
+      clearAllCookiesAndTokens();
       // Focus on input field once mounted
       setTimeout(() => {
         inputRef.current?.focus();
       }, 100);
     }
+
+    // Listener when leaving/closing the tab to wipe cookies
+    const handleTabUnload = () => {
+      clearAllCookiesAndTokens();
+    };
+
+    window.addEventListener("pagehide", handleTabUnload);
+    window.addEventListener("beforeunload", handleTabUnload);
+
+    return () => {
+      window.removeEventListener("pagehide", handleTabUnload);
+      window.removeEventListener("beforeunload", handleTabUnload);
+    };
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
